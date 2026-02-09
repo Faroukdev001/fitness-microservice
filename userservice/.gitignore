@@ -18,6 +18,15 @@ target/
 *.iws
 *.iml
 *.ipr
+*.properties
+*.yml
+*.yaml
+out/
+build/
+target/
+logs/
+*.log
+*.class
 
 ### NetBeans ###
 /nbproject/private/
