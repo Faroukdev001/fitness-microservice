@@ -2,6 +2,8 @@ package com.fitness.userservice.service;
 
 import com.fitness.userservice.dto.RegisterRequest;
 import com.fitness.userservice.dto.UserResponse;
+import com.fitness.userservice.exception.BusinessException;
+import com.fitness.userservice.exception.ResourceNotFoundException;
 import com.fitness.userservice.model.User;
 import com.fitness.userservice.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -17,7 +19,7 @@ public class UserService {
     public UserResponse register(@Valid RegisterRequest request) {
 
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new BusinessException("Email already exists");
         }
         User user = new User();
         user.setEmail(request.getEmail());
@@ -40,7 +42,7 @@ public class UserService {
 
     public UserResponse getUserProfile(String userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         UserResponse userResponse = new UserResponse();
         userResponse.setId(user.getId());
