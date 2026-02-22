@@ -2,6 +2,7 @@ package com.fitness.activityservice.service;
 
 import com.fitness.activityservice.dto.ActivityRequest;
 import com.fitness.activityservice.dto.ActivityResponse;
+import com.fitness.activityservice.exception.ResourceNotFoundException;
 import com.fitness.activityservice.model.Activity;
 import com.fitness.activityservice.repository.ActivityRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,9 @@ public class ActivityService {
 
     public List<ActivityResponse> getUserActivities(String userId) {
         List<Activity> activities = activityRepository.findByUserId(userId);
+        if (activities.isEmpty()) {
+            throw new ResourceNotFoundException("User activity not found");
+        }
         return activities.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -55,7 +59,7 @@ public class ActivityService {
 
     public ActivityResponse getActivity(String activityId) {
         Activity activity = activityRepository.findById(activityId)
-                .orElseThrow(() -> new RuntimeException("Activity not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Activity not found"));
         return mapToResponse(activity);
     }
 }
